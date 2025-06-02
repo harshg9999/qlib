@@ -725,7 +725,7 @@ class YahooNormalizeBR1min(YahooNormalizeBR, YahooNormalize1min):
 
 
 class Run(BaseRun):
-    def __init__(self, source_dir=None, normalize_dir=None, max_workers=1, interval="1d", region=REGION_CN):
+    def __init__(self, source_dir=None, normalize_dir=None, max_workers=1, interval="1d", region="US"):
         """
 
         Parameters
@@ -1006,15 +1006,15 @@ class Run(BaseRun):
 
         # parse index
         _region = self.region.lower()
-        if _region not in ["cn", "us"]:
-            logger.warning(f"Unsupported region: region={_region}, component downloads will be ignored")
+        if _region != "us":
+            logger.warning(f"Unsupported region: region={_region}, component downloads will be ignored. Only US is supported.")
             return
-        index_list = ["CSI100", "CSI300"] if _region == "cn" else ["SP500", "NASDAQ100", "DJIA", "SP400"]
+        index_list = ["SP500", "NASDAQ100", "DJIA", "SP400"]
         get_instruments = getattr(
-            importlib.import_module(f"data_collector.{_region}_index.collector"), "get_instruments"
+            importlib.import_module(f"data_collector.us_index.collector"), "get_instruments"
         )
         for _index in index_list:
-            get_instruments(str(qlib_data_1d_dir), _index, market_index=f"{_region}_index")
+            get_instruments(str(qlib_data_1d_dir), _index, market_index="us_index")
 
 
 if __name__ == "__main__":

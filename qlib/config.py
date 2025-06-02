@@ -230,7 +230,7 @@ MODE_CONF = {
     },
     "client": {
         # config it in user's own code
-        "provider_uri": "~/.qlib/qlib_data/cn_data",
+        "provider_uri": "~/.qlib/qlib_data/us_data",
         # cache
         # Using parameter 'remote' to announce the client is using server_cache, and the writing access will be disabled.
         # Disable cache by default. Avoid introduce advanced features for beginners
@@ -244,7 +244,7 @@ MODE_CONF = {
         # serversS(such as PAI) [auto_mount:True]
         "timeout": 100,
         "logging_level": logging.INFO,
-        "region": REG_CN,
+        "region": REG_US,
         # custom operator
         # each element of custom_ops should be Type[ExpressionOps] or dict
         # if element of custom_ops is Type[ExpressionOps], it represents the custom operator class
@@ -254,10 +254,10 @@ MODE_CONF = {
 }
 
 HIGH_FREQ_CONFIG = {
-    "provider_uri": "~/.qlib/qlib_data/cn_data_1min",
+    "provider_uri": "~/.qlib/qlib_data/us_data_1min",
     "dataset_cache": None,
     "expression_cache": "DiskExpressionCache",
-    "region": REG_CN,
+    "region": REG_US,
 }
 
 _default_region_config = {
