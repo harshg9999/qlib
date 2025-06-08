@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Callable, Optional, Union
 from typing import TYPE_CHECKING
 
-from qlib.constant import REG_CN, REG_US, REG_TW
+from qlib.constant import REG_US
 
 if TYPE_CHECKING:
     from qlib.utils.time import Freq
@@ -230,7 +230,7 @@ MODE_CONF = {
     },
     "client": {
         # config it in user's own code
-        "provider_uri": "~/.qlib/qlib_data/cn_data",
+        "provider_uri": "~/.qlib/qlib_data/us_data",
         # cache
         # Using parameter 'remote' to announce the client is using server_cache, and the writing access will be disabled.
         # Disable cache by default. Avoid introduce advanced features for beginners
@@ -244,7 +244,7 @@ MODE_CONF = {
         # serversS(such as PAI) [auto_mount:True]
         "timeout": 100,
         "logging_level": logging.INFO,
-        "region": REG_CN,
+        "region": REG_US,
         # custom operator
         # each element of custom_ops should be Type[ExpressionOps] or dict
         # if element of custom_ops is Type[ExpressionOps], it represents the custom operator class
@@ -254,26 +254,16 @@ MODE_CONF = {
 }
 
 HIGH_FREQ_CONFIG = {
-    "provider_uri": "~/.qlib/qlib_data/cn_data_1min",
+    "provider_uri": "~/.qlib/qlib_data/us_data_1min",
     "dataset_cache": None,
     "expression_cache": "DiskExpressionCache",
-    "region": REG_CN,
+    "region": REG_US,
 }
 
 _default_region_config = {
-    REG_CN: {
-        "trade_unit": 100,
-        "limit_threshold": 0.095,
-        "deal_price": "close",
-    },
     REG_US: {
         "trade_unit": 1,
         "limit_threshold": None,
-        "deal_price": "close",
-    },
-    REG_TW: {
-        "trade_unit": 1000,
-        "limit_threshold": 0.1,
         "deal_price": "close",
     },
 }
@@ -420,7 +410,7 @@ class QlibConfig(Config):
         logger.info(f"default_conf: {default_conf}.")
 
         self.set_mode(default_conf)
-        self.set_region(kwargs.get("region", self["region"] if "region" in self else REG_CN))
+        self.set_region(kwargs.get("region", self["region"] if "region" in self else REG_US))
 
         for k, v in kwargs.items():
             if k not in self:

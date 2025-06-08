@@ -1,4 +1,3 @@
-
 - [Collector Data](#collector-data)
   - [Get Qlib data](#get-qlib-databin-file)
   - [Collector *YahooFinance* data to qlib](#collector-yahoofinance-data-to-qlib)
@@ -39,15 +38,11 @@ pip install -r requirements.txt
       - If users want to incrementally update data, they need to use yahoo collector to [collect data from scratch](#collector-yahoofinance-data-to-qlib).
       - **the [benchmarks](https://github.com/microsoft/qlib/tree/main/examples/benchmarks) for qlib use `v1`**, *due to the unstable access to historical data by YahooFinance, there are some differences between `v2` and `v1`*
     - `interval`: `1d` or `1min`, by default `1d`
-    - `region`: `cn` or `us` or `in`, by default `cn`
+    - `region`: `us`, by default `us`
     - `delete_old`: delete existing data from `target_dir`(*features, calendars, instruments, dataset_cache, features_cache*), value from [`True`, `False`], by default `True`
     - `exists_skip`: traget_dir data already exists, skip `get_data`, value from [`True`, `False`], by default `False`
   - examples:
     ```bash
-    # cn 1d
-    python scripts/get_data.py qlib_data --target_dir ~/.qlib/qlib_data/cn_data --region cn
-    # cn 1min
-    python scripts/get_data.py qlib_data --target_dir ~/.qlib/qlib_data/cn_data_1min --region cn --interval 1min
     # us 1d
     python scripts/get_data.py qlib_data --target_dir ~/.qlib/qlib_data/us_data --region us --interval 1d
     ```
@@ -63,7 +58,7 @@ pip install -r requirements.txt
           - `source_dir`: save the directory
           - `interval`: `1d` or `1min`, by default `1d`
             > **due to the limitation of the *YahooFinance API*, only the last month's data is available in `1min`**
-          - `region`: `CN` or `US` or `IN` or `BR`, by default `CN`
+          - `region`: `US`, by default `US`
           - `delay`: `time.sleep(delay)`, by default *0.5*
           - `start`: start datetime, by default *"2000-01-01"*; *closed interval(including start)*
           - `end`: end datetime, by default `pd.Timestamp(datetime.datetime.now() + pd.Timedelta(days=1))`; *open interval(excluding end)*
@@ -73,25 +68,10 @@ pip install -r requirements.txt
           - `max_collector_count`: number of *"failed"* symbol retries, by default 2
      - examples:
           ```bash
-          # cn 1d data
-          python collector.py download_data --source_dir ~/.qlib/stock_data/source/cn_data --start 2020-01-01 --end 2020-12-31 --delay 1 --interval 1d --region CN
-          # cn 1min data
-          python collector.py download_data --source_dir ~/.qlib/stock_data/source/cn_data_1min --delay 1 --interval 1min --region CN
-
           # us 1d data
           python collector.py download_data --source_dir ~/.qlib/stock_data/source/us_data --start 2020-01-01 --end 2020-12-31 --delay 1 --interval 1d --region US
           # us 1min data
           python collector.py download_data --source_dir ~/.qlib/stock_data/source/us_data_1min --delay 1 --interval 1min --region US
-
-          # in 1d data
-          python collector.py download_data --source_dir ~/.qlib/stock_data/source/in_data --start 2020-01-01 --end 2020-12-31 --delay 1 --interval 1d --region IN
-          # in 1min data
-          python collector.py download_data --source_dir ~/.qlib/stock_data/source/in_data_1min --delay 1 --interval 1min --region IN
-
-          # br 1d data
-          python collector.py download_data --source_dir ~/.qlib/stock_data/source/br_data --start 2003-01-03 --end 2022-03-01 --delay 1 --interval 1d --region BR
-          # br 1min data
-          python collector.py download_data --source_dir ~/.qlib/stock_data/source/br_data_1min --delay 1 --interval 1min --region BR
           ```
   2. normalize data: `python scripts/data_collector/yahoo/collector.py normalize_data`
      
@@ -105,7 +85,7 @@ pip install -r requirements.txt
           - `max_workers`: number of concurrent, by default *1*
           - `interval`: `1d` or `1min`, by default `1d`
             > if **`interval == 1min`**, `qlib_data_1d_dir` cannot be `None`
-          - `region`: `CN` or `US` or `IN`, by default `CN`
+          - `region`: `US`, by default `US`
           - `date_field_name`: column *name* identifying time in csv files, by default `date`
           - `symbol_field_name`: column *name* identifying symbol in csv files, by default `symbol`
           - `end_date`: if not `None`, normalize the last date saved (*including end_date*); if `None`, it will ignore this parameter; by default `None`
@@ -122,17 +102,11 @@ pip install -r requirements.txt
             ```
       - examples:
         ```bash
-        # normalize 1d cn
-        python collector.py normalize_data --source_dir ~/.qlib/stock_data/source/cn_data --normalize_dir ~/.qlib/stock_data/source/cn_1d_nor --region CN --interval 1d
+        # normalize 1d us
+        python collector.py normalize_data --source_dir ~/.qlib/stock_data/source/us_data --normalize_dir ~/.qlib/stock_data/source/us_1d_nor --region US --interval 1d
 
-        # normalize 1min cn
-        python collector.py normalize_data --qlib_data_1d_dir ~/.qlib/qlib_data/cn_data --source_dir ~/.qlib/stock_data/source/cn_data_1min --normalize_dir ~/.qlib/stock_data/source/cn_1min_nor --region CN --interval 1min
-
-        # normalize 1d br
-        python scripts/data_collector/yahoo/collector.py normalize_data --source_dir ~/.qlib/stock_data/source/br_data --normalize_dir ~/.qlib/stock_data/source/br_1d_nor --region BR --interval 1d
-
-        # normalize 1min br
-        python collector.py normalize_data --qlib_data_1d_dir ~/.qlib/qlib_data/br_data --source_dir ~/.qlib/stock_data/source/br_data_1min --normalize_dir ~/.qlib/stock_data/source/br_1min_nor --region BR --interval 1min
+        # normalize 1min us
+        python collector.py normalize_data --qlib_data_1d_dir ~/.qlib/qlib_data/us_data --source_dir ~/.qlib/stock_data/source/us_data_1min --normalize_dir ~/.qlib/stock_data/source/us_1min_nor --region US --interval 1min
         ```
   3. dump data: `python scripts/dump_bin.py dump_all`
     
@@ -151,10 +125,10 @@ pip install -r requirements.txt
        - `date_field_name`: column *name* identifying time in csv files, by default `date`
      - examples:
        ```bash
-       # dump 1d cn
-       python dump_bin.py dump_all --csv_path ~/.qlib/stock_data/source/cn_1d_nor --qlib_dir ~/.qlib/qlib_data/cn_data --freq day --exclude_fields date,symbol
-       # dump 1min cn
-       python dump_bin.py dump_all --csv_path ~/.qlib/stock_data/source/cn_1min_nor --qlib_dir ~/.qlib/qlib_data/cn_data_1min --freq 1min --exclude_fields date,symbol
+       # dump 1d us
+       python dump_bin.py dump_all --csv_path ~/.qlib/stock_data/source/us_1d_nor --qlib_dir ~/.qlib/qlib_data/us_data --freq day --exclude_fields date,symbol
+       # dump 1min us
+       python dump_bin.py dump_all --csv_path ~/.qlib/stock_data/source/us_1min_nor --qlib_dir ~/.qlib/qlib_data/us_data_1min --freq 1min --exclude_fields date,symbol
        ```
 
 ### Automatic update of daily frequency data(from yahoo finance)
@@ -195,26 +169,14 @@ pip install -r requirements.txt
   import qlib
   from qlib.data import D
 
-  # 1d data cn
-  # freq=day, freq default day
-  qlib.init(provider_uri="~/.qlib/qlib_data/cn_data", region="cn")
-  df = D.features(D.instruments("all"), ["$close"], freq="day")
-
-  # 1min data cn
-  # freq=1min
-  qlib.init(provider_uri="~/.qlib/qlib_data/cn_data_1min", region="cn")
-  inst = D.list_instruments(D.instruments("all"), freq="1min", as_list=True)
-  # get 100 symbols
-  df = D.features(inst[:100], ["$close"], freq="1min")
-  # get all symbol data
-  # df = D.features(D.instruments("all"), ["$close"], freq="1min")
-
   # 1d data us
+  # freq=day, freq default day
   qlib.init(provider_uri="~/.qlib/qlib_data/us_data", region="us")
   df = D.features(D.instruments("all"), ["$close"], freq="day")
 
   # 1min data us
-  qlib.init(provider_uri="~/.qlib/qlib_data/us_data_1min", region="cn")
+  # freq=1min
+  qlib.init(provider_uri="~/.qlib/qlib_data/us_data_1min", region="us")
   inst = D.list_instruments(D.instruments("all"), freq="1min", as_list=True)
   # get 100 symbols
   df = D.features(inst[:100], ["$close"], freq="1min")
